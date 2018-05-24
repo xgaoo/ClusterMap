@@ -1,0 +1,14 @@
+Package: ClusterMap
+Type: Package
+Title: What the Package Does (Title Case)
+Version: 0.1.0
+Author: Xin Gao
+Maintainer: Xin Gao <xig@stowers.org>
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+Depends: R(>= 3.4.3)
+Imports: Seurat(>= 2.2.1),pheatmap(>= 1.0.10),ape(>= 5.1),circlize(>= 0.4.3)
