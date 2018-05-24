@@ -4,8 +4,7 @@ Title: What the Package Does (Title Case)
 Version: 0.1.0
 Author: Xin Gao
 Maintainer: Xin Gao <xig@stowers.org>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: ClusterMap is designed to analyze and compare two or more single cell expression datasets.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

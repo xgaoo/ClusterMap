@@ -1,6 +1,6 @@
 # ClusterMap
 
-ClusterMap is designed to analyze and compare two or more single cell expression datasets. 
+ClusterMap is an R package designed to analyze and compare two or more single cell expression datasets. 
 
 ## Installation
 
