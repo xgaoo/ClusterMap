@@ -4,10 +4,10 @@ ClusterMap is an R package designed to analyze and compare two or more single ce
 
 ## Installation
 
-```r
+```{r}
 install_github('devtools')  
 library('devtools')  
-install_github('ClusterMap','metalhelix')  
+install_github('ClusterMap','xgaoo')  
 library('ClusterMap')  
 ```
 
