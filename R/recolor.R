@@ -55,7 +55,7 @@ recolor_s <- function(mapRes_sub, obj, output, color = NULL)
 #' @param output
 #' The output directory to save the plot.
 #' @param comb_delim
-#' The delimiter used in the cell names in the combined object to connect sample name and cell name. DEFAULT is '-'.
+#' The delimiter used in the cell names in the combined object to connect sample name and cell name in individual sample. DEFAULT is '-'.
 #' @param color
 #' A vector of colors used to recolor the new groups. DEFAULT is NULL. Pre defined internal color will be used.
 #' @return A vector of new group labels with the cell name as the vector name.
@@ -84,9 +84,11 @@ recolor_comb <- function(comb_obj, new_group_list, output, comb_delim = '-', col
     dev.off()
 	## assign new group
     new_group <- unlist(new_group_list)
-	names(new_group) <- sub('\\.', '-', names(new_group))
+	names(new_group) <- sub('\\.', comb_delim, names(new_group))
     new_group <- factor(new_group, levels = levels(new_group_list[[1]]))
     new_group <- new_group[match(colnames(comb_obj@data), as.vector(names(new_group)))] ## some cells may be filtered out in combined sample.
+	if (is.na(new_group))
+		stop("Cell names in comb_obj don't match cell names in new_group_list or single_obj_list. Cell names in comb_obj should be sample name and cell name in individual sample connected by comb_delim.")
 	names(new_group) <- colnames(comb_obj@data)
 	## color by new group
     comb_obj <- AddMetaData(object = comb_obj, metadata = new_group, col.name = "regroup")

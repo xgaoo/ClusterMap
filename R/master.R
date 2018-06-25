@@ -31,7 +31,7 @@
 #' @param comb_obj
 #' A Seurat object for the combined sample. Cells in different samples are labelled by the sample names with the comb_delim. The sample names should be the same as the list names of marker_file_list.
 #' @param comb_delim
-#' The delimiter used in the cell names in the combined object to connect sample name and cell name. DEFAULT is '-'.
+#' The delimiter used in the cell names in the combined object to connect sample name and cell name in individual sample. DEFAULT is '-'.
 #' @param k
 #' K-nearest neighbours used to calculate distance. DEFAULT is 5.
 #' @return A dataframe of the matching results. Heatmap of marker genes, the corresponding dendrogram, circos plot and recolored t-SNE plots will be saved into files.

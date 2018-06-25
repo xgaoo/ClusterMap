@@ -38,7 +38,7 @@ make_single_obj <- function(data_dir, is.10X = TRUE, output)
 #' @param is.10X
 #' The input data is 10X genomics format or not. DEFAULT is TRUE.
 #' @param comb_delim
-#' The delimiter used in the cell names in the combined object to connect sample name and cell name. DEFAULT is '-'.
+#' The delimiter used in the cell names in the combined object to connect sample name and cell name in individual sample. DEFAULT is '-'.
 #' @return A Seurat object.
 #' @export
 

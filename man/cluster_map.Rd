@@ -21,7 +21,7 @@ cluster_map(marker_file_list, edge_cutoff = 0.1, output,
 
 \item{comb_obj}{A Seurat object for the combined sample. Cells in different samples are labelled by the sample names with the comb_delim. The sample names should be the same as the list names of marker_file_list.}
 
-\item{comb_delim}{The delimiter used in the cell names in the combined object to connect sample name and cell name. DEFAULT is '-'.}
+\item{comb_delim}{The delimiter used in the cell names in the combined object to connect sample name and cell name in individual sample. DEFAULT is '-'.}
 
 \item{k}{K-nearest neighbours used to calculate distance. DEFAULT is 5.}
 }

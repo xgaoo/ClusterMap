@@ -14,7 +14,7 @@ recolor_comb(comb_obj, new_group_list, output, comb_delim = "-",
 
 \item{output}{The output directory to save the plot.}
 
-\item{comb_delim}{The delimiter used in the cell names in the combined object to connect sample name and cell name. DEFAULT is '-'.}
+\item{comb_delim}{The delimiter used in the cell names in the combined object to connect sample name and cell name in individual sample. DEFAULT is '-'.}
 
 \item{color}{A vector of colors used to recolor the new groups. DEFAULT is NULL. Pre defined internal color will be used.}
 }

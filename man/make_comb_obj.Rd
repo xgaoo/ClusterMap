@@ -11,7 +11,7 @@ make_comb_obj(data_dirList, is.10X = TRUE, comb_delim = "-")
 
 \item{is.10X}{The input data is 10X genomics format or not. DEFAULT is TRUE.}
 
-\item{comb_delim}{The delimiter used in the cell names in the combined object to connect sample name and cell name. DEFAULT is '-'.}
+\item{comb_delim}{The delimiter used in the cell names in the combined object to connect sample name and cell name in individual sample. DEFAULT is '-'.}
 }
 \value{
 A Seurat object.
