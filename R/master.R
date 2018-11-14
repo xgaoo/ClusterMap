@@ -56,8 +56,8 @@ cluster_map <- function(marker_file_list, edge_cutoff = 0.1, output, cell_num_li
 	{
 		if (all(names(marker_file_list) == names(cell_num_list)) == FALSE | is.null(names(marker_file_list)) | is.null(names(cell_num_list)))
 			stop("names(marker_file_list) doesn't match names(cell_num_list).")
-		circos_map(mapRes, cell_num_list, output)
-		mapRes <- add_perc(mapRes, cell_num_list)
+		circos_map(mapRes, cell_num_list, output, comb_delim)
+		mapRes <- add_perc(mapRes, cell_num_list, comb_delim)
 	}
 
 	## Recolor tsne plot for each sample if single Seurat object list is provided.
