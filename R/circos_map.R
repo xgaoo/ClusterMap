@@ -15,13 +15,11 @@
 #' A vector of colors for the cord of circos plot. DEFAULT is NULL. Pre defined internal color will be used.
 #' @param color_sample
 #' A vector of colors for the sample sectors in the circos plot. DEFAULT is NULL. Pre defined internal color will be used.
-#' @param comb_delim
-#' The delimiter used in the cell names in the combined object to connect sample name and cell name in individual sample. DEFAULT is '-'.
 #' @return circos plot will be save.
 #' @export
 
 
-circos_map <- function(mapRes, cell_num_list, output, color_cord = NULL, color_sample = NULL, comb_delim = '-')
+circos_map <- function(mapRes, cell_num_list, output, color_cord = NULL, color_sample = NULL)
 { ## circos_map will call function plot_circos, gg_color_hue and makeTransparent.
 	message("circos plot")
 
@@ -59,18 +57,18 @@ circos_map <- function(mapRes, cell_num_list, output, color_cord = NULL, color_s
 	if (is.null(color_cord)) col_cord <- gg_color_hue(nrow(mapRes)) else col_cord <- color_cord
 	## circos plot
 	png(paste0(output, '.circos.png'))
-		plot_circos(cell_perc_list, pair, mapRes, col_cord, col_sample, comb_delim)
+		plot_circos(cell_perc_list, pair, mapRes, col_cord, col_sample)
 	dev.off()
 	pdf(paste0(output, '.circos.pdf'))
-		plot_circos(cell_perc_list, pair, mapRes, col_cord, col_sample, comb_delim)
+		plot_circos(cell_perc_list, pair, mapRes, col_cord, col_sample)
 	dev.off()
 }
 
 
-plot_circos <- function(cell_perc_list, pair, mapRes, col_cord, col_sample, comb_delim)
+plot_circos <- function(cell_perc_list, pair, mapRes, col_cord, col_sample)
 {
 	cell_perc <- unlist(cell_perc_list)
-	names(cell_perc) <- sub('\\.', comb_delim, names(cell_perc))
+	names(cell_perc) <- sub('\\.([0-9]*)$', '_\\1', names(cell_perc))
 	cell_perc[cell_perc < 0.01] <- 0.01 ## too small to plot
 	fa <- factor(names(cell_perc), levels = unique(names(cell_perc)))
 	## initialize
@@ -79,12 +77,12 @@ plot_circos <- function(cell_perc_list, pair, mapRes, col_cord, col_sample, comb
 	circos.initialize(fa, xlim = cbind(rep(0, length(cell_perc)), cell_perc))
 	## plot sample sectors
 	circos.track(ylim = c(0, 1), track.height = uh(5, "mm"), bg.border = NA)
-	for (n in names(cell_perc_list)) highlight.sector(paste0(n, comb_delim, names(cell_perc_list[[n]])), track.index = 1,
+	for (n in names(cell_perc_list)) highlight.sector(paste0(n, "_", names(cell_perc_list[[n]])), track.index = 1,
 		col = col_sample[match(n, names(cell_perc_list))], padding = c(0, 0, 0.3, 0), text = n, cex = 1.5, text.col = "black", niceFacing = TRUE)
 	## plot sub-group sectors
 	circos.track(fa, ylim = c(0, 1), panel.fun = function(x, y)
 		{
-		circos.text(CELL_META$xcenter, CELL_META$ylim[1], sub(paste0('.*', comb_delim), '', CELL_META$sector.index),
+		circos.text(CELL_META$xcenter, CELL_META$ylim[1], sub('.*_', '', CELL_META$sector.index),
 		adj = c(0.3, -2), niceFacing = TRUE)
 		}, bg.col = 'black', bg.border = NA, track.height = 0.05, track.margin = c(0, 0.1)
 	)
@@ -123,19 +121,17 @@ makeTransparent <- function(someColor, alpha = 100)
 #' A dataframe of the output of function cluster_map_by_marker.
 #' @param cell_num_list
 #' A list of vector of cell numbers for each group and each sample.
-#' @param comb_delim
-#' The delimiter used in the cell names in the combined object to connect sample name and cell name in individual sample. DEFAULT is '-'.		       
 #' @return A dataframe of the matching results with cell percentage column added.
 #' @export
 
-add_perc <- function(mapRes, cell_num_list, comb_delim = '-')
+add_perc <- function(mapRes, cell_num_list)
 {
 	sample_name <- names(cell_num_list)
 	if (all(sample_name %in% colnames(mapRes)) == FALSE)
 		stop("names(marker_file_list) or samples in mapRes doesn't match names(cell_num_list).")
 	cell_perc_list <- lapply(cell_num_list, function(x) round(x/sum(x), 2))
 	cell_perc <- unlist(cell_perc_list)
-	names(cell_perc) <- sub('\\.', comb_delim, names(cell_perc))
+	names(cell_perc) <- sub('\\.([0-9]*)$', '_\\1', names(cell_perc))
 	## add to mapRes
 	res_sub <- mapRes[, sample_name]
 	res_perc <- apply(res_sub, 1:2, function(x)
