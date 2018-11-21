@@ -52,7 +52,7 @@ make_comb_obj <- function(data_dirList, is.10X = TRUE, comb_delim = '-')
 		warning("The names(data_dirList) is NULL. Sample names are assigned as '", paste(names(data_dirList), collapse = ' '), "'")
 		}
 	da_list <- lapply(n, function(x){
-		if (is.10X) da <- Read10X(data_dirList[[n]]) else da <- read.table(data_dirList[[n]], sep = "\t")
+		if (is.10X) da <- Read10X(data_dirList[[x]]) else da <- read.table(data_dirList[[x]], sep = "\t")
 		colnames(da) <- paste0(x, comb_delim, colnames(da))
 		return(da)
 		})
