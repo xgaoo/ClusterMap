@@ -95,7 +95,7 @@ purity_cut <- function(hcluster, cutoff = 0.1)
 		return(extract.clade(hcp, x)$tip.label)})
 	names(offs_nodeList) <- tree$low_node
 	## get sample list that the nodes belong to
-	sampleList <- lapply(offs_nodeList, function(x) unique(sub('_.*', '', x)))
+	sampleList <- lapply(offs_nodeList, function(x) unique(sub('_[0-9]*$', '', x)))
 	tree$low_node_offs_sample <-  unlist(lapply(sampleList, length))
 	## check if keep the node
 	nodeList <- split(tree, tree$high_node)
@@ -131,10 +131,10 @@ purity_cut <- function(hcluster, cutoff = 0.1)
 	singles <- setdiff(hcp$tip.label, unlist(res))
 	res <- c(res, as.list(singles))
 	## reform output
-	lev <- sort(unique(sub('_.*', '', hcp$tip.label)))
+	lev <- sort(unique(sub('_[0-9]*$', '', hcp$tip.label)))
 	res_reform <- do.call(rbind, lapply(res, function(x)
 	{
-		tmp <- split(x, f = factor(sub('_.*', '', x), levels = lev))
+		tmp <- split(x, f = factor(sub('_[0-9]*$', '', x), levels = lev))
 		unlist(lapply(tmp, paste, collapse = ';'))
 	}))
 	rownames(res_reform) <- 1:nrow(res_reform)
