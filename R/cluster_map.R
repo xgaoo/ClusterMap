@@ -24,7 +24,7 @@ cluster_map_by_marker <- function(marker_file_list, cutoff = 0.1, output)
 		names(marker_file_list) <- paste0('s', 1:length(marker_file_list))
 		warning("The names(marker_file_list) is empty. Sample names are assigned as '", paste(names(marker_file_list), collapse = ' '), "'" )
 	}
-	markerList <- lapply(marker_file_list, read.csv)
+	markerList <- lapply(marker_file_list, read.csv, as.is = T)
 	markerList <- lapply(names(markerList), function(n)
 	{
 		x <- markerList[[n]]
@@ -32,14 +32,8 @@ cluster_map_by_marker <- function(marker_file_list, cutoff = 0.1, output)
 		return(x)
 	})
 	markers <- do.call(rbind, markerList)
-	geneList <- split(markers[ , 'gene'], as.factor(markers$cluster))
-	tmp <- lapply(geneList, function(x)x[match(levels(as.factor(markers$gene)), x)])
-	marker_table <- do.call(cbind, tmp)
-	rownames(marker_table) <- levels(as.factor(markers$gene))
-	marker_table[is.na(marker_table)] <- 0
-	marker_table[marker_table > 0] <- 1
 	## clustering
-	da <- t(marker_table)
+	da <- table(markers[,c("cluster","gene")])
 	d <- dist(da, method = 'binary')
 	hc <- hclust(d, method = 'average')
 	png(paste0(output, '.hcluster.png')) ## save dendrogram png
@@ -121,6 +115,12 @@ purity_cut <- function(hcluster, cutoff = 0.1)
 		tmp <- (sum(keep_sub) == 2 & keep[nd])
 		keep[nd] <- tmp
 	}
+	if (all(keep == TRUE))
+        {
+                message("No matched groups.")
+                return(NULL)
+        }
+
 	## get rid of lower duplicated nodes
 	res <- offs_nodeList[names(keep)[keep == T]]
 	for (x in rev(names(res)))
