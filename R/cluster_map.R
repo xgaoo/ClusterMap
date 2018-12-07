@@ -36,14 +36,14 @@ cluster_map_by_marker <- function(marker_file_list, cutoff = 0.1, output)
 	da <- table(markers[,c("cluster","gene")])
 	d <- dist(da, method = 'binary')
 	hc <- hclust(d, method = 'average')
-	png(paste0(output, '.hcluster.png')) ## save dendrogram png
+	png(paste0(output, '.hcluster.png')， width = 480*length(marker_file_list)) ## save dendrogram png
 		plot(hc)
 	dev.off()
-	pdf(paste0(output, '.hcluster.pdf')) ## save dendrogram pdf
+	pdf(paste0(output, '.hcluster.pdf'), width = 7*length(marker_file_list)) ## save dendrogram pdf
 		plot(hc)
 	dev.off()
 	## save heatmap png
-	png(paste0(output, '.heatmap.hcluster.png'))
+	png(paste0(output, '.heatmap.hcluster.png'), height = 480*length(marker_file_list)))
 	ph <- pheatmap(da, scale = 'none', clustering_method = 'average', color = c('#e3f8f9', '#fc2807'),
 		show_rownames = T, show_colnames = F, clustering_distance_rows = 'binary',
 		legend_breaks = c(0, 1), legend_labels = c(0, 1))
@@ -51,7 +51,7 @@ cluster_map_by_marker <- function(marker_file_list, cutoff = 0.1, output)
 	ph <- pheatmap(da, scale = 'none', clustering_method = 'average', color = c('#e3f8f9', '#fc2807'),
 		show_rownames = T, show_colnames = F, clustering_distance_rows = 'binary',
 		legend_breaks = c(0, 1), legend_labels = c(0, 1),
-		filename = paste0(output, '.heatmap.hcluster.pdf'))
+		filename = paste0(output, '.heatmap.hcluster.pdf'), height = 7*length(marker_file_list))
 	## tree cut
 	res <- purity_cut(hc, cutoff)
 	##write.csv(res, file = paste0(output, '.cluster.map.csv'))
