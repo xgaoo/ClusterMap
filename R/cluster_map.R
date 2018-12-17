@@ -43,7 +43,7 @@ cluster_map_by_marker <- function(marker_file_list, cutoff = 0.1, output)
 		plot(hc)
 	dev.off()
 	## save heatmap png
-	png(paste0(output, '.heatmap.hcluster.png'), height = 480*length(marker_file_list)))
+	png(paste0(output, '.heatmap.hcluster.png'), height = 480*length(marker_file_list))
 	ph <- pheatmap(da, scale = 'none', clustering_method = 'average', color = c('#e3f8f9', '#fc2807'),
 		show_rownames = T, show_colnames = F, clustering_distance_rows = 'binary',
 		legend_breaks = c(0, 1), legend_labels = c(0, 1))
