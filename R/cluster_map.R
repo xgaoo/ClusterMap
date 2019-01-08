@@ -36,7 +36,7 @@ cluster_map_by_marker <- function(marker_file_list, cutoff = 0.1, output)
 	da <- table(markers[,c("cluster","gene")])
 	d <- dist(da, method = 'binary')
 	hc <- hclust(d, method = 'average')
-	png(paste0(output, '.hcluster.png')， width = 480*length(marker_file_list)) ## save dendrogram png
+	png(paste0(output, '.hcluster.png'), width = 480*length(marker_file_list)) ## save dendrogram png
 		plot(hc)
 	dev.off()
 	pdf(paste0(output, '.hcluster.pdf'), width = 7*length(marker_file_list)) ## save dendrogram pdf
