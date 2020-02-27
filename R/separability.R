@@ -129,4 +129,3 @@ inna_dist <- function(x, k)
     knn_median <- function(x, k){ median(sort(x)[2:k+1]) } ## take median of K distance of a cell
     median(apply(x, 1, knn_median, k)) ## take median of distance of all cells
 }
-

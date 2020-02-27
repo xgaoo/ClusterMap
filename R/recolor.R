@@ -25,11 +25,17 @@ recolor_s <- function(mapRes_sub, obj, output, color = NULL)
 	if (is.null(names(mapRes_sub))) stop("There is no name of mapRes_sub.")
     l <- lapply(strsplit(mapRes_sub, ';'), sub, pattern = '.*_', replacement = '')
     new_match <- setNames(unlist(l, use.names = F), rep(names(l), lengths(l)))
-    new_group <- obj@ident
-    levels(new_group) <- names(new_match)[match(levels(obj@ident), new_match)]
+    if(obj@version > 3){
+        new_group <- Idents(object = obj)
+        levels(new_group) <- names(new_match)[match(levels(Idents(object=obj)), new_match)]
+    }
+    else{
+        new_group <- obj@idents
+        levels(new_group) <- names(new_match)[match(levels(obj@idents), new_match)]
+    }
     new_group <- factor(new_group, levels = names(mapRes_sub))
 	## t-SNE plot
-    obj <- AddMetaData(object = obj, metadata = new_group, col.name = "regroup")
+    obj$regroup <- new_group
 	if (is.null(color)) color <- gg_color_hue(length(levels(new_group)))
     png(paste0(output, '.recolor.tsne.png'))
 		TSNEPlot(obj, do.label = T, label.size = 8, group.by = 'regroup',
@@ -66,16 +72,16 @@ recolor_comb <- function(comb_obj, new_group_list, output, comb_delim = '-', col
 {## recolor_comb will call function gg_color_hue.
 	message(paste0("recolor ", output))
 
-    sample_label <- as.factor(sub(paste0(comb_delim, '.*'), '', colnames(comb_obj@data)))
+    sample_label <- as.factor(sub(paste0(comb_delim, '.*'), '', colnames(GetAssayData(object = comb_obj))))
 	message("levels(sample_label):")
 	print(levels(sample_label))
 	message("names(new_group_list):")
 	print(names(new_group_list))
     if (all(levels(sample_label) == names(new_group_list)) == FALSE)
 		stop("Sample label in comb_obj doesn't match names(new_group_list) or names(single_obj_list).")
-	names(sample_label) <- colnames(comb_obj@data)
+	names(sample_label) <- colnames(GetAssayData(object = comb_obj))
 	## color by samples
-	comb_obj <- AddMetaData(object = comb_obj, metadata = sample_label, col.name = "samples")
+	comb_obj$samples <- sample_label
 	png(paste0(output, '.color.by.sample.tsne.png'))
 		TSNEPlot(comb_obj, do.label = F, label.size = 8, group.by = 'samples', plot.title = 'Colored by sample')
     dev.off()
@@ -86,10 +92,10 @@ recolor_comb <- function(comb_obj, new_group_list, output, comb_delim = '-', col
     new_group <- unlist(new_group_list)
 	names(new_group) <- sub('\\.', comb_delim, names(new_group))
     new_group <- factor(new_group, levels = levels(new_group_list[[1]]))
-    new_group <- new_group[match(colnames(comb_obj@data), as.vector(names(new_group)))] ## some cells may be filtered out in combined sample.
+    new_group <- new_group[match(colnames(GetAssayData(object = comb_obj)), as.vector(names(new_group)))] ## some cells may be filtered out in combined sample.
 	if (is.na(new_group[1]))
 		stop("Cell names in comb_obj don't match cell names in new_group_list or single_obj_list. Cell names in comb_obj should be sample name and cell name in individual sample connected by comb_delim.")
-	names(new_group) <- colnames(comb_obj@data)
+	names(new_group) <- colnames(GetAssayData(object = comb_obj))
 	## color by new group
     comb_obj <- AddMetaData(object = comb_obj, metadata = new_group, col.name = "regroup")
 	if (is.null(color)) color  <-  gg_color_hue(length(levels(new_group)))

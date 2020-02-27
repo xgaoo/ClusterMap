@@ -48,9 +48,19 @@ cluster_map <- function(marker_file_list, edge_cutoff = 0.1, output, cell_num_li
 	{
 		if (all(names(marker_file_list) == names(single_obj_list)) == FALSE | is.null(names(marker_file_list)) | is.null(names(single_obj_list)))
 			stop("names(marker_file_list) doesn't match names(single_obj_list).")
-		cell_num_list <- lapply(single_obj_list, function(obj)summary(obj@ident))
-	}
 
+        if (single_obj_list[[1]]@version > 3){
+		cell_num_list <- lapply(single_obj_list,
+                            function(obj){
+                                    summary(Idents(obj))
+                                         })
+        }
+
+        else if(single_obj_list[[1]]@version < 3){
+		cell_num_list <- lapply(single_obj_list, function(obj){
+                                    summary(obj@ident)})
+	    }
+    }
 	## make circos plot and add cell percentage if cell_num_list is provided or single Seurat object list is provided.
 	if (!is.null(cell_num_list))
 	{
@@ -73,13 +83,13 @@ cluster_map <- function(marker_file_list, edge_cutoff = 0.1, output, cell_num_li
 		## Recolor tsne plot for combined sample and calculate separability if combined Seurat object is provided.
 		if (!is.null(comb_obj))
 		{
-			sample_label <- as.factor(sub(paste0(comb_delim, '.*'), '', colnames(comb_obj@data)))
+			sample_label <- as.factor(sub(paste0(comb_delim, '.*'), '', colnames(GetAssayData(object = comb_obj))))
 			if (all(levels(sample_label) == names(new_group_list)) == FALSE)
 				stop("Sample label in comb_obj doesn't match names(new_group_list) or names(single_obj_list).")
 
 			new_group_list$comb <- recolor_comb(comb_obj, new_group_list, output, comb_delim)
 
-			tsne_coord <- as.data.frame(comb_obj@dr$tsne@cell.embeddings)
+			tsne_coord <- as.data.frame(comb_obj@reductions$tsne@cell.embeddings)
 			sepa <- separability_pairwise(tsne_coord, group = new_group_list$comb, sample_label, k = k)
 			colnames(sepa) <- paste0(colnames(sepa), '_separability')
 
