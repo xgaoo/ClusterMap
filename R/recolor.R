@@ -19,7 +19,7 @@
 
 
 recolor_s <- function(mapRes_sub, obj, output, color = NULL)
-{## recolor_s will call function gg_color_hue.
+{## recolor_s will call function gg_colr_hue.
 	message(paste0("recolor ", output))
 
 	if (is.null(names(mapRes_sub))) stop("There is no name of mapRes_sub.")
@@ -49,7 +49,7 @@ recolor_s <- function(mapRes_sub, obj, output, color = NULL)
     return(new_group)
 }
 
-   else{	
+   else if(obj@version > 3){	
 	   if (is.null(color)) color <- gg_color_hue(length(levels(new_group)))
     png(paste0(output, '.recolor.tsne.png'))
 		DimPlot(obj, label = T, label.size = 8, group.by = 'regroup',
@@ -63,6 +63,7 @@ recolor_s <- function(mapRes_sub, obj, output, color = NULL)
     dev.off()
     return(new_group)
 }	   
+}
 #' recolor_comb
 #'
 #' Recolor the combined sample based on the matching results from recolor_s.
@@ -84,7 +85,8 @@ recolor_s <- function(mapRes_sub, obj, output, color = NULL)
 
 
 recolor_comb <- function(comb_obj, new_group_list, output, comb_delim = '-', color = NULL)
-{## recolor_comb will call function gg_color_hue.
+{
+	## recolor_comb will call function gg_color_hue.
 	message(paste0("recolor ", output))
 
     sample_label <- as.factor(sub(paste0(comb_delim, '.*'), '', colnames(GetAssayData(object = comb_obj))))
@@ -97,6 +99,8 @@ recolor_comb <- function(comb_obj, new_group_list, output, comb_delim = '-', col
 	names(sample_label) <- colnames(GetAssayData(object = comb_obj))
 	## color by samples
 	comb_obj$samples <- sample_label
+
+	if (obj@version <3) {
 	png(paste0(output, '.color.by.sample.tsne.png'))
 		TSNEPlot(comb_obj, do.label = F, label.size = 8, group.by = 'samples', plot.title = 'Colored by sample')
     dev.off()
@@ -123,4 +127,39 @@ recolor_comb <- function(comb_obj, new_group_list, output, comb_delim = '-', col
 			colors.use = color[sort(as.numeric(unique(new_group)))], plot.title = 'Combined')
     dev.off()
     return(new_group)
+		}
+else if(obj@version > 3){
+		png(paste0(output, '.color.by.sample.tsne.png'))
+		DimPlot(comb_obj, label = F, label.size = 8, group.by = 'samples', 
+			reduction = "tsne", plot.title = 'Colored by sample')
+    dev.off()
+	pdf(paste0(output, '.color.by.sample.tsne.pdf'))
+		DimPlot(comb_obj, label = F, label.size = 8, group.by = 'samples',
+			reduction = "tsne", plot.title = 'Colored by sample')
+    dev.off()
+	## assign new group
+    new_group <- unlist(new_group_list)
+	names(new_group) <- sub('\\.', comb_delim, names(new_group))
+    new_group <- factor(new_group, levels = levels(new_group_list[[1]]))
+    new_group <- new_group[match(colnames(GetAssayData(object = comb_obj)), as.vector(names(new_group)))] ## some cells may be filtered out in combined sample.
+	if (is.na(new_group[1]))
+		stop("Cell names in comb_obj don't match cell names in new_group_list or single_obj_list. Cell names in comb_obj should be sample name and cell name in individual sample connected by comb_delim.")
+	names(new_group) <- colnames(GetAssayData(object = comb_obj))
+	## color by new group
+    comb_obj <- AddMetaData(object = comb_obj, metadata = new_group, col.name = "regroup")
+	if (is.null(color)) color  <-  gg_color_hue(length(levels(new_group)))
+    png(paste0(output, '.recolor.tsne.png'))
+		DimPlot(comb_obj, label = T, label.size = 8, 
+			reduction = "tsne", group.by = 'regroup',
+			colors.use = color[sort(as.numeric(unique(new_group)))], plot.title = 'Combined')
+    dev.off()
+    pdf(paste0(output, '.recolor.tsne.pdf'))
+		DimPlot(comb_obj, label = T, label.size = 8,
+			reduction = "tsne", group.by = 'regroup',
+			colors.use = color[sort(as.numeric(unique(new_group)))], plot.title = 'Combined')
+    dev.off()
+    return(new_group)
 }
+		
+}
+
