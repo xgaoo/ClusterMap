@@ -40,6 +40,10 @@
 
 cluster_map <- function(marker_file_list, edge_cutoff = 0.1, output, cell_num_list = NULL, single_obj_list = NULL, comb_obj = NULL, comb_delim = '-', k = 5)
 {
+	## Version check for comb delim
+	if(obj@version > 3){
+		comb_delim = '_')
+	}
 	## match sub groups
 	mapRes <- cluster_map_by_marker(marker_file_list, cutoff = edge_cutoff, output = output)
 
