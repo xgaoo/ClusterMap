@@ -106,7 +106,7 @@ recolor_comb <- function(comb_obj, new_group_list, output, comb_delim = '-', col
 	## color by samples
 	comb_obj$samples <- sample_label
 
-	if (obj@version <3) {
+	if (comb_obj@version <3) {
 	png(paste0(output, '.color.by.sample.tsne.png'))
 		TSNEPlot(comb_obj, do.label = F, label.size = 8, group.by = 'samples', plot.title = 'Colored by sample')
     dev.off()
@@ -134,7 +134,7 @@ recolor_comb <- function(comb_obj, new_group_list, output, comb_delim = '-', col
     dev.off()
     return(new_group)
 		}
-else if(obj@version > 3){
+else if(comb_obj@version > 3){
 		png(paste0(output, '.color.by.sample.tsne.png'))
 		DimPlot(comb_obj, label = F, label.size = 8, group.by = 'samples', 
 			reduction = "tsne", plot.title = 'Colored by sample')
