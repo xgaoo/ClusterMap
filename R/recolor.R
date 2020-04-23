@@ -86,6 +86,10 @@ recolor_s <- function(mapRes_sub, obj, output, color = NULL)
 
 recolor_comb <- function(comb_obj, new_group_list, output, comb_delim = '-', color = NULL)
 {
+	## Change comb_delim if v3 Seurat
+	if(comb_obj@version > 3){
+		comb_delim = '_'
+	}
 	## recolor_comb will call function gg_color_hue.
 	message(paste0("recolor ", output))
 
@@ -151,12 +155,12 @@ else if(obj@version > 3){
     png(paste0(output, '.recolor.tsne.png'))
 		DimPlot(comb_obj, label = T, label.size = 8, 
 			reduction = "tsne", group.by = 'regroup',
-			colors.use = color[sort(as.numeric(unique(new_group)))], plot.title = 'Combined')
+			cols = color[sort(as.numeric(unique(new_group)))], plot.title = 'Combined')
     dev.off()
     pdf(paste0(output, '.recolor.tsne.pdf'))
 		DimPlot(comb_obj, label = T, label.size = 8,
 			reduction = "tsne", group.by = 'regroup',
-			colors.use = color[sort(as.numeric(unique(new_group)))], plot.title = 'Combined')
+			cols = color[sort(as.numeric(unique(new_group)))], plot.title = 'Combined')
     dev.off()
     return(new_group)
 }
