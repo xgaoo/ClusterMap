@@ -26,7 +26,7 @@ recolor_s <- function(mapRes_sub, obj, output, color = NULL)
 	if (is.null(names(mapRes_sub))) stop("There is no name of mapRes_sub.")
     l <- lapply(strsplit(mapRes_sub, ';'), sub, pattern = '.*_', replacement = '')
     new_match <- setNames(unlist(l, use.names = F), rep(names(l), lengths(l)))
-    if(single_obj_list[[1]] > 3){
+    if(single_obj_list[[1]]@version > 3){
         new_group <- Idents(object = obj)
         levels(new_group) <- names(new_match)[match(levels(Idents(object=obj)), new_match)]
     }
@@ -38,7 +38,7 @@ recolor_s <- function(mapRes_sub, obj, output, color = NULL)
 	## t-SNE plot
     obj$regroup <- new_group
 	
-	if(single_obj_list[[1]] < 3){	
+	if(single_obj_list[[1]]@version < 3){	
 	if (is.null(color)) color <- gg_color_hue(length(levels(new_group)))
     png(paste0(output, '.recolor.tsne.png'))
 		TSNEPlot(obj, do.label = T, label.size = 8, group.by = 'regroup',
