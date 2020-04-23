@@ -51,7 +51,7 @@ recolor_s <- function(mapRes_sub, obj, output, color = NULL)
     return(new_group)
 }
 
-   else if(comb_obj@version > 3){	
+   else if(obj@version > 3){	
 	   if (is.null(color)) color <- gg_color_hue(length(levels(new_group)))
     png(paste0(output, '.recolor.tsne.png'))
 		DimPlot(obj, label = T, label.size = 8, group.by = 'regroup',
