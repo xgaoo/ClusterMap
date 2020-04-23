@@ -19,7 +19,8 @@
 
 
 recolor_s <- function(mapRes_sub, obj, output, color = NULL)
-{## recolor_s will call function gg_colr_hue.
+{
+	## recolor_s will call function gg_colr_hue.
 	message(paste0("recolor ", output))
 
 	if (is.null(names(mapRes_sub))) stop("There is no name of mapRes_sub.")
@@ -36,6 +37,7 @@ recolor_s <- function(mapRes_sub, obj, output, color = NULL)
     new_group <- factor(new_group, levels = names(mapRes_sub))
 	## t-SNE plot
     obj$regroup <- new_group
+	
 	if(obj@version < 3){	
 	if (is.null(color)) color <- gg_color_hue(length(levels(new_group)))
     png(paste0(output, '.recolor.tsne.png'))
