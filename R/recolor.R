@@ -27,6 +27,7 @@ recolor_s <- function(mapRes_sub, obj, output, color = NULL)
     l <- lapply(strsplit(mapRes_sub, ';'), sub, pattern = '.*_', replacement = '')
     new_match <- setNames(unlist(l, use.names = F), rep(names(l), lengths(l)))
     if(single_obj_list[[1]]@version > 3){
+	print("Using Seurat V3")
         new_group <- Idents(object = obj)
         levels(new_group) <- names(new_match)[match(levels(Idents(object=obj)), new_match)]
     }
@@ -52,6 +53,7 @@ recolor_s <- function(mapRes_sub, obj, output, color = NULL)
 }
 
    else{	
+	   print("Using Seurat v3")
 	   if (is.null(color)) color <- gg_color_hue(length(levels(new_group)))
     png(paste0(output, '.recolor.tsne.png'))
 		DimPlot(obj, label = T, label.size = 8, group.by = 'regroup',
@@ -91,7 +93,9 @@ recolor_comb <- function(comb_obj, new_group_list, output, comb_delim = '-', col
 	## Change comb_delim if v3 Seurat
 	if(comb_obj@version > 3){
 		comb_delim = '_'
+		print("Changed comb_delim to '_'")
 	}
+
 	## recolor_comb will call function gg_color_hue.
 	message(paste0("recolor ", output))
 
@@ -107,6 +111,7 @@ recolor_comb <- function(comb_obj, new_group_list, output, comb_delim = '-', col
 	comb_obj$samples <- sample_label
 
 	if (comb_obj@version <3) {
+		print("Seurat v2")
 	png(paste0(output, '.color.by.sample.tsne.png'))
 		TSNEPlot(comb_obj, do.label = F, label.size = 8, group.by = 'samples', plot.title = 'Colored by sample')
     dev.off()
@@ -135,6 +140,7 @@ recolor_comb <- function(comb_obj, new_group_list, output, comb_delim = '-', col
     return(new_group)
 		}
 else if(comb_obj@version > 3){
+	print("Seurat v3 comb_obj")
 		png(paste0(output, '.color.by.sample.tsne.png'))
 		DimPlot(comb_obj, label = F, label.size = 8, group.by = 'samples', 
 			reduction = "tsne", plot.title = 'Colored by sample')
