@@ -142,11 +142,13 @@ recolor_comb <- function(comb_obj, new_group_list, output, comb_delim = '-', col
 else if(comb_obj@version > 3){
 	print("Seurat v3 comb_obj")
 		DimPlot(comb_obj, label = F, label.size = 8, group.by = 'samples', 
-			reduction = "tsne", plot.title = 'Colored by sample')
-    ggsave(paste0(output, '.color.by.sample.tsne.png'))
+			reduction = "tsne") + 
+			ggtitle('Colored by sample') + 
+    			ggsave(paste0(output, '.color.by.sample.tsne.png'))
 		DimPlot(comb_obj, label = F, label.size = 8, group.by = 'samples',
-			reduction = "tsne", plot.title = 'Colored by sample')
-    ggsave(paste0(output, '.color.by.sample.tsne.pdf'))
+			reduction = "tsne") +
+			ggtitle('Colored by sample') + 
+    			ggsave(paste0(output, '.color.by.sample.tsne.pdf'))
 	## assign new group
     new_group <- unlist(new_group_list)
 	names(new_group) <- sub('\\.', comb_delim, names(new_group))
@@ -161,12 +163,14 @@ else if(comb_obj@version > 3){
 	if (is.null(color)) color  <-  gg_color_hue(length(levels(new_group)))
 		DimPlot(comb_obj, label = T, label.size = 8, 
 			reduction = "tsne", group.by = 'regroup',
-			cols = color[sort(as.numeric(unique(new_group)))], plot.title = 'Combined')
-    ggsave(paste0(output, '.recolor.tsne.png'))
+			cols = color[sort(as.numeric(unique(new_group)))]) +
+			ggtitle('Combined') + 
+    			ggsave(paste0(output, '.recolor.tsne.png'))
 		DimPlot(comb_obj, label = T, label.size = 8,
 			reduction = "tsne", group.by = 'regroup',
-			cols = color[sort(as.numeric(unique(new_group)))], plot.title = 'Combined')
-    ggsave(paste0(output, '.recolor.tsne.pdf'))
+			cols = color[sort(as.numeric(unique(new_group)))]) + 
+			ggtitle('Combined') + 
+    			ggsave(paste0(output, '.recolor.tsne.pdf'))
     return(new_group)
 }
 		
