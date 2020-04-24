@@ -55,16 +55,14 @@ recolor_s <- function(mapRes_sub, obj, output, color = NULL)
    else{	
 	   print("Using Seurat v3")
 	   if (is.null(color)) color <- gg_color_hue(length(levels(new_group)))
-    png(paste0(output, '.recolor.tsne.png'))
-		DimPlot(obj, label = T, label.size = 8, group.by = 'regroup',
+
+	DimPlot(obj, label = T, label.size = 8, group.by = 'regroup',
 			reduction = "tsne",
-			cols = color[sort(as.numeric(unique(new_group)))], plot.title = toupper(output))
-    dev.off()
-	pdf(paste0(output, '.recolor.tsne.pdf'))
-		DimPlot(obj, label = T, label.size = 8, group.by = 'regroup',
-			reduction = "tsne",
-			cols = color[sort(as.numeric(unique(new_group)))], plot.title = toupper(output))
-    dev.off()
+			cols = color[sort(as.numeric(unique(new_group)))])
+    		ggtitle(paste(toupper(output))) + 
+		ggsave(paste0(output, '.recolor.tsne.png'))
+		ggsave(paste0(output, '.recolor.tsne.pdf'))
+
     return(new_group)
 	}	   
 }
