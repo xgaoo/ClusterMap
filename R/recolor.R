@@ -139,14 +139,14 @@ recolor_comb <- function(comb_obj, new_group_list, output, comb_delim = '-', col
 		}
 else if(comb_obj@version > 3){
 	print("Seurat v3 comb_obj")
-		DimPlot(comb_obj, label = F, label.size = 8, group.by = 'samples', 
+		p5 <- DimPlot(comb_obj, label = F, label.size = 8, group.by = 'samples', 
 			reduction = "tsne") + 
-			ggtitle('Colored by sample') + 
-    			ggsave(paste0(output, '.color.by.sample.tsne.png'))
-		DimPlot(comb_obj, label = F, label.size = 8, group.by = 'samples',
+			ggtitle('Colored by sample') 
+    			ggsave(plot = p5, filename = paste0(output, '.color.by.sample.tsne.png'))
+		p4 <- DimPlot(comb_obj, label = F, label.size = 8, group.by = 'samples',
 			reduction = "tsne") +
-			ggtitle('Colored by sample') + 
-    			ggsave(paste0(output, '.color.by.sample.tsne.pdf'))
+			ggtitle('Colored by sample')  
+    			ggsave(plot = p4, filename = paste0(output, '.color.by.sample.tsne.pdf'))
 	## assign new group
     new_group <- unlist(new_group_list)
 	names(new_group) <- sub('\\.', comb_delim, names(new_group))
@@ -159,16 +159,16 @@ else if(comb_obj@version > 3){
 	## color by new group
     comb_obj <- AddMetaData(object = comb_obj, metadata = new_group, col.name = "regroup")
 	if (is.null(color)) color  <-  gg_color_hue(length(levels(new_group)))
-		DimPlot(comb_obj, label = T, label.size = 8, 
+		plot1 <- DimPlot(comb_obj, label = T, label.size = 8, 
 			reduction = "tsne", group.by = 'regroup',
 			cols = color[sort(as.numeric(unique(new_group)))]) +
-			ggtitle('Combined') + 
-    			ggsave(paste0(output, '.recolor.tsne.png'))
-		DimPlot(comb_obj, label = T, label.size = 8,
+			ggtitle('Combined') 
+    			ggsave(plot = plot1, filename = paste0(output, '.recolor.tsne.png'))
+		plot2 <- DimPlot(comb_obj, label = T, label.size = 8,
 			reduction = "tsne", group.by = 'regroup',
 			cols = color[sort(as.numeric(unique(new_group)))]) + 
-			ggtitle('Combined') + 
-    			ggsave(paste0(output, '.recolor.tsne.pdf'))
+			ggtitle('Combined') 
+    			ggsave(plot = plot2, filename = paste0(output, '.recolor.tsne.pdf'))
     return(new_group)
 }
 		
