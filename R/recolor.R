@@ -37,7 +37,7 @@ recolor_s <- function(mapRes_sub, obj, output, color = NULL)
     }
     new_group <- factor(new_group, levels = names(mapRes_sub))
 	## t-SNE plot
-    obj$regroup <- new_group
+    obj@meta.data$regroup <- new_group
 	
 	if(single_obj_list[[1]]@version < 3){	
 	if (is.null(color)) color <- gg_color_hue(length(levels(new_group)))
