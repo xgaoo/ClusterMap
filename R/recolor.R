@@ -32,8 +32,8 @@ recolor_s <- function(mapRes_sub, obj, output, color = NULL)
         levels(new_group) <- names(new_match)[match(levels(Idents(object=obj)), new_match)]
     }
     else{
-        new_group <- obj@idents
-        levels(new_group) <- names(new_match)[match(levels(obj@idents), new_match)]
+        new_group <- obj@ident
+        levels(new_group) <- names(new_match)[match(levels(obj@ident), new_match)]
     }
     new_group <- factor(new_group, levels = names(mapRes_sub))
 	## t-SNE plot
