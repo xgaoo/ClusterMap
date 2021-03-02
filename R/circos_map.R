@@ -77,7 +77,7 @@ plot_circos <- function(cell_perc_list, pair, mapRes, col_cord, col_sample)
 	circos.initialize(fa, xlim = cbind(rep(0, length(cell_perc)), cell_perc))
 	## plot sample sectors
 	circos.track(ylim = c(0, 1), track.height = uh(5, "mm"), bg.border = NA)
-	for (n in names(cell_perc_list)) highlight.sector(paste0(n, "_", names(cell_perc_list[[n]])), track.index = 1,
+	for (n in names(cell_perc_list)) highlight.sector(paste0(n, "__", names(cell_perc_list[[n]])), track.index = 1,
 		col = col_sample[match(n, names(cell_perc_list))], padding = c(0, 0, 0.3, 0), text = n, cex = 1.5, text.col = "black", niceFacing = TRUE)
 	## plot sub-group sectors
 	circos.track(fa, ylim = c(0, 1), panel.fun = function(x, y)
@@ -131,7 +131,7 @@ add_perc <- function(mapRes, cell_num_list)
 		stop("names(marker_file_list) or samples in mapRes doesn't match names(cell_num_list).")
 	cell_perc_list <- lapply(cell_num_list, function(x) round(x/sum(x), 2))
 	cell_perc <- unlist(cell_perc_list)
-	names(cell_perc) <- sub('\\.*$', '_\\1', names(cell_perc))
+	names(cell_perc) <- sub('\\.*$', '__\\1', names(cell_perc))
 	## add to mapRes
 	res_sub <- mapRes[, sample_name]
 	res_perc <- apply(res_sub, 1:2, function(x)
