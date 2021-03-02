@@ -67,8 +67,10 @@ circos_map <- function(mapRes, cell_num_list, output, color_cord = NULL, color_s
 
 plot_circos <- function(cell_perc_list, pair, mapRes, col_cord, col_sample)
 {
-	cell_perc <- unlist(cell_perc_list)
-	names(cell_perc) <- sub('\\.*$', '__\\1', names(cell_perc))
+	temp=cell_perc_list
+	names(temp)=paste0(names(temp),"__")
+	cell_perc <- unlist(temp)
+	names(cell_perc) <- sub('__.', '__', names(cell_perc))
 	cell_perc[cell_perc < 0.01] <- 0.01 ## too small to plot
 	fa <- factor(names(cell_perc), levels = unique(names(cell_perc)))
 	## initialize
@@ -130,8 +132,10 @@ add_perc <- function(mapRes, cell_num_list)
 	if (all(sample_name %in% colnames(mapRes)) == FALSE)
 		stop("names(marker_file_list) or samples in mapRes doesn't match names(cell_num_list).")
 	cell_perc_list <- lapply(cell_num_list, function(x) round(x/sum(x), 2))
-	cell_perc <- unlist(cell_perc_list)
-	names(cell_perc) <- sub('\\.*$', '__\\1', names(cell_perc))
+	temp=cell_perc_list
+	names(temp)=paste0(names(temp),"__")
+	cell_perc <- unlist(temp)
+	names(cell_perc) <- sub('__.', '__', names(cell_perc))
 	## add to mapRes
 	res_sub <- mapRes[, sample_name]
 	res_perc <- apply(res_sub, 1:2, function(x)
