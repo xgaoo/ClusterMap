@@ -41,6 +41,7 @@
 
 cluster_map <- function(marker_file_list, edge_cutoff = 0.1, output, cell_num_list = NULL, single_obj_list = NULL, comb_obj = NULL, comb_delim = '-', k = 5, seurat_version = 3)
 {
+	circos.clear()
 	## Version check for comb delim
 	if(seurat_version == 3){
 		comb_delim = '_'
