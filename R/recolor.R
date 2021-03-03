@@ -14,11 +14,13 @@
 #' The output directory to save the plot.
 #' @param color
 #' A vector of colors used to recolor the new groups. DEFAULT is NULL. Pre defined internal color will be used.
+#' @param reduction
+#' Select the reduction of "tsne", "umap", or "pca" that used for the recolor image.
 #' @return A vector of new group labels with the cell name as the vector name.
 #' @export
 
 
-recolor_s <- function(mapRes_sub, obj, output, color = NULL)
+recolor_s <- function(mapRes_sub, obj, output, color = NULL, reduction="tsne")
 {
 	## recolor_s will call function gg_colr_hue.
 	message(paste0("recolor ", output))
@@ -57,11 +59,11 @@ recolor_s <- function(mapRes_sub, obj, output, color = NULL)
 	   if (is.null(color)) color <- gg_color_hue(length(levels(new_group)))
 
 	p3 <- DimPlot(obj, label = T, label.size = 8, group.by = 'regroup',
-			reduction = "tsne",
+			reduction = reduction,
 			cols = color[sort(as.numeric(unique(new_group)))])
     		ggtitle(paste(toupper(output))) 
-		ggsave(plot = p3, filename = paste0(output, '.recolor.tsne.png'))
-		ggsave(plot = p3, filename = paste0(output, '.recolor.tsne.pdf'))
+		ggsave(plot = p3, filename = paste0(output, '.recolor.', reduction, '.png'))
+		ggsave(plot = p3, filename = paste0(output, '.recolor.', reduction, '.pdf'))
 
     return(new_group)
 	}	   
@@ -82,11 +84,13 @@ recolor_s <- function(mapRes_sub, obj, output, color = NULL)
 #' The delimiter used in the cell names in the combined object to connect sample name and cell name in individual sample. DEFAULT is '-'.
 #' @param color
 #' A vector of colors used to recolor the new groups. DEFAULT is NULL. Pre defined internal color will be used.
+#' @param reduction
+#' Select the reduction of "tsne", "umap", or "pca" that used for the recolor image.
 #' @return A vector of new group labels with the cell name as the vector name.
 #' @export
 
 
-recolor_comb <- function(comb_obj, new_group_list, output, comb_delim = '-', color = NULL)
+recolor_comb <- function(comb_obj, new_group_list, output, comb_delim = '-', color = NULL, reduction="tsne")
 {
 	## Change comb_delim if v3 Seurat
 	if(comb_obj@version > 3){
@@ -140,13 +144,13 @@ recolor_comb <- function(comb_obj, new_group_list, output, comb_delim = '-', col
 else if(comb_obj@version > 3){
 	print("Seurat v3 comb_obj")
 		p5 <- DimPlot(comb_obj, label = F, label.size = 8, group.by = 'samples', 
-			reduction = "tsne") + 
+			reduction = reduction) + 
 			ggtitle('Colored by sample') 
-    			ggsave(plot = p5, filename = paste0(output, '.color.by.sample.tsne.png'))
+    			ggsave(plot = p5, filename = paste0(output, '.color.by.sample.', reduction, '.png'))
 		p4 <- DimPlot(comb_obj, label = F, label.size = 8, group.by = 'samples',
-			reduction = "tsne") +
+			reduction = reduction) +
 			ggtitle('Colored by sample')  
-    			ggsave(plot = p4, filename = paste0(output, '.color.by.sample.tsne.pdf'))
+    			ggsave(plot = p4, filename = paste0(output, '.color.by.sample.', reduction, '.pdf'))
 	## assign new group
     new_group <- unlist(new_group_list)
 	names(new_group) <- sub('\\.', comb_delim, names(new_group))
@@ -160,15 +164,15 @@ else if(comb_obj@version > 3){
     comb_obj <- AddMetaData(object = comb_obj, metadata = new_group, col.name = "regroup")
 	if (is.null(color)) color  <-  gg_color_hue(length(levels(new_group)))
 		plot1 <- DimPlot(comb_obj, label = T, label.size = 8, 
-			reduction = "tsne", group.by = 'regroup',
+			reduction = reduction, group.by = 'regroup',
 			cols = color[sort(as.numeric(unique(new_group)))]) +
 			ggtitle('Combined') 
-    			ggsave(plot = plot1, filename = paste0(output, '.recolor.tsne.png'))
+    			ggsave(plot = plot1, filename = paste0(output, '.recolor.', reduction, '.png'))
 		plot2 <- DimPlot(comb_obj, label = T, label.size = 8,
-			reduction = "tsne", group.by = 'regroup',
+			reduction = reduction, group.by = 'regroup',
 			cols = color[sort(as.numeric(unique(new_group)))]) + 
 			ggtitle('Combined') 
-    			ggsave(plot = plot2, filename = paste0(output, '.recolor.tsne.pdf'))
+    			ggsave(plot = plot2, filename = paste0(output, '.recolor.', reduction, '.pdf'))
     return(new_group)
 }
 		
