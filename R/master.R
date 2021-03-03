@@ -35,11 +35,13 @@
 #' The delimiter used in the cell names in the combined object to connect sample name and cell name in individual sample. DEFAULT is '-'.
 #' @param k
 #' K-nearest neighbours used to calculate distance. DEFAULT is 5.
+#' @param reduction
+#' Select the reduction of "tsne", "umap", or "pca" that used for the recolor image.
 #' @return A dataframe of the matching results. Heatmap of marker genes, the corresponding dendrogram, circos plot and recolored t-SNE plots will be saved into files.
 #' @export
 
 
-cluster_map <- function(marker_file_list, edge_cutoff = 0.1, output, cell_num_list = NULL, single_obj_list = NULL, comb_obj = NULL, comb_delim = '-', k = 5, seurat_version = 3)
+cluster_map <- function(marker_file_list, edge_cutoff = 0.1, output, cell_num_list = NULL, single_obj_list = NULL, comb_obj = NULL, comb_delim = '-', k = 5, seurat_version = 3, reduction="tsne")
 {
 	circos.clear()
 	## Version check for comb delim
@@ -76,17 +78,17 @@ cluster_map <- function(marker_file_list, edge_cutoff = 0.1, output, cell_num_li
 		mapRes <- add_perc(mapRes, cell_num_list)
 	}
 
-	## Recolor tsne plot for each sample if single Seurat object list is provided.
+	## Recolor reduction plot for each sample if single Seurat object list is provided.
 	if (!is.null(single_obj_list))
 	{
 		sample_names <- names(single_obj_list)
 		new_group_list <- lapply(sample_names, function(n){
 			da <- structure(as.vector(mapRes[, n]), names = mapRes$regroup)
-			recolor_s(da, single_obj_list[[n]], n)
+			recolor_s(da, single_obj_list[[n]], n, reduction=reduction)
 		})
 		names(new_group_list) <- names(single_obj_list)
 
-		## Recolor tsne plot for combined sample and calculate separability if combined Seurat object is provided.
+		## Recolor reduction plot for combined sample and calculate separability if combined Seurat object is provided.
 		if (!is.null(comb_obj))
 		{
 			sample_label <- as.factor(sub(paste0(comb_delim, '.*'), '', colnames(GetAssayData(object = comb_obj))))
@@ -95,8 +97,8 @@ cluster_map <- function(marker_file_list, edge_cutoff = 0.1, output, cell_num_li
 
 			new_group_list$comb <- recolor_comb(comb_obj, new_group_list, output, comb_delim)
 
-			tsne_coord <- as.data.frame(comb_obj@reductions$tsne@cell.embeddings)
-			sepa <- separability_pairwise(tsne_coord, group = new_group_list$comb, sample_label, k = k)
+			coord <- as.data.frame(comb_obj@reductions[[reduction]]@cell.embeddings)
+			sepa <- separability_pairwise(coord, group = new_group_list$comb, sample_label, k = k)
 			colnames(sepa) <- paste0(colnames(sepa), '_separability')
 
 			mapRes <- cbind(mapRes, sepa)
