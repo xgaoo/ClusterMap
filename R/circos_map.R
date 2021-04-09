@@ -15,11 +15,15 @@
 #' A vector of colors for the cord of circos plot. DEFAULT is NULL. Pre defined internal color will be used.
 #' @param color_sample
 #' A vector of colors for the sample sectors in the circos plot. DEFAULT is NULL. Pre defined internal color will be used.
+#' @param width
+#' The width of circos plot by inch.
+#' @param height
+#' The height of circos plot by inch.
 #' @return circos plot will be save.
 #' @export
 
 
-circos_map <- function(mapRes, cell_num_list, output, color_cord = NULL, color_sample = NULL)
+circos_map <- function(mapRes, cell_num_list, output, color_cord = NULL, color_sample = NULL, width=7, height=7)
 { ## circos_map will call function plot_circos, gg_color_hue and makeTransparent.
 	message("circos plot")
 
@@ -56,10 +60,10 @@ circos_map <- function(mapRes, cell_num_list, output, color_cord = NULL, color_s
 	if (is.null(color_sample)) col_sample <- rep(c("#f9865c", "#84e281", "#74d2f7", "#e083fc", "#ffbf66", "#6682ff"), 10) else col_sample <- color_sample
 	if (is.null(color_cord)) col_cord <- gg_color_hue(nrow(mapRes)) else col_cord <- color_cord
 	## circos plot
-	png(paste0(output, '.circos.png'))
+	png(paste0(output, '.circos.png'), width=width/7*480, height=height/7*480)
 		plot_circos(cell_perc_list, pair, mapRes, col_cord, col_sample)
 	dev.off()
-	pdf(paste0(output, '.circos.pdf'))
+	pdf(paste0(output, '.circos.pdf'), width=width, height=height)
 		plot_circos(cell_perc_list, pair, mapRes, col_cord, col_sample)
 	dev.off()
 }
