@@ -91,9 +91,14 @@ cluster_map <- function(marker_file_list, edge_cutoff = 0.1, output, cell_num_li
 		## Recolor reduction plot for combined sample and calculate separability if combined Seurat object is provided.
 		if (!is.null(comb_obj))
 		{
-			sample_label <- as.factor(sub(paste0(comb_delim, '.*'), '', colnames(GetAssayData(object = comb_obj))))
+			sample_label <- as.factor(sub(paste0(comb_delim, '.*'), '', rownames(comb_obj@meta.data)))
 			if (all(levels(sample_label) == names(new_group_list)) == FALSE)
-				stop("Sample label in comb_obj doesn't match names(new_group_list) or names(single_obj_list).")
+				{stop("Sample label in comb_obj doesn't match names(new_group_list) or names(single_obj_list).")
+				 message("Sample label in comb_obj: ")
+				 print(levels(sample_label))
+				 message("names(single_obj_list): ")
+				 print(names(single_obj_list))
+				 }
 
 			new_group_list$comb <- recolor_comb(comb_obj, new_group_list, output, comb_delim)
 
