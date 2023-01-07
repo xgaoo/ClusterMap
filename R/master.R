@@ -92,7 +92,7 @@ cluster_map <- function(marker_file_list, edge_cutoff = 0.1, output, cell_num_li
 		if (!is.null(comb_obj))
 		{
 			sample_label <- as.factor(sub(paste0(comb_delim, '.*'), '', rownames(comb_obj@meta.data)))
-			if (all(levels(sample_label) == names(new_group_list)) == FALSE)
+			if (all(sort(levels(sample_label)) == sort(names(new_group_list))) == FALSE)
 				{
 				 message("Sample label in comb_obj: ")
 				 print(levels(sample_label))
