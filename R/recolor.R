@@ -106,7 +106,7 @@ recolor_comb <- function(comb_obj, new_group_list, output, comb_delim = '-', col
 	print(levels(sample_label))
 	message("names(new_group_list):")
 	print(names(new_group_list))
-    if (all(levels(sample_label) == names(new_group_list)) == FALSE)
+    if (all(sort(levels(sample_label)) == sort(names(new_group_list))) == FALSE)
 		stop("Sample label in comb_obj doesn't match names(new_group_list) or names(single_obj_list).")
 	names(sample_label) <- colnames(GetAssayData(object = comb_obj))
 	## color by samples
