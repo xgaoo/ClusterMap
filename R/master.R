@@ -77,6 +77,7 @@ cluster_map <- function(marker_file_list, edge_cutoff = 0.1, output, cell_num_li
 		circos_map(mapRes, cell_num_list, output)
 		mapRes <- add_perc(mapRes, cell_num_list)
 	}
+	return(mapRes)
 
 	## Recolor reduction plot for each sample if single Seurat object list is provided.
 	if (!is.null(single_obj_list))
@@ -86,7 +87,6 @@ cluster_map <- function(marker_file_list, edge_cutoff = 0.1, output, cell_num_li
 			da <- structure(as.vector(mapRes[, n]), names = mapRes$regroup)
 			recolor_s(da, single_obj_list[[n]], n, reduction=reduction)
 		})
-		return(new_group_list)
 		names(new_group_list) <- names(single_obj_list)
 
 		## Recolor reduction plot for combined sample and calculate separability if combined Seurat object is provided.
