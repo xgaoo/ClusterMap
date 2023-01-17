@@ -100,7 +100,7 @@ cluster_map <- function(marker_file_list, edge_cutoff = 0.1, output, cell_num_li
 				 print(names(single_obj_list))
 				 stop("Sample label in comb_obj doesn't match names(new_group_list) or names(single_obj_list).")
 				 }
-
+			print(names(new_group_list))
 			new_group_list$comb <- recolor_comb(comb_obj, new_group_list, output, comb_delim, reduction=reduction)
 
 			coord <- as.data.frame(comb_obj@reductions[[reduction]]@cell.embeddings)
